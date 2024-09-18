@@ -1,6 +1,6 @@
-# Path Finding NN
+# Path Finding Neural Networks
 
-finding the shortest path using neural networks and genetic algorithms.
+Application finding the shortest path using neural networks and genetic algorithms.
 
 Built together with [@dpasca](https://github.com/dpasca) who developed `Model 1`. 
 
@@ -56,5 +56,22 @@ Further update of the submodule can be done with the command:
 
 6. Run the program
   ```
-  ./build/Release/path-finding-nn
+  ./build/Release/path-finding
   ```
+
+## Screnshots
+
+### Starting position
+
+![Starting position](screenshots/starting_position.png)
+
+### Start training
+
+![Start training](screenshots/start_training.png)
+
+
+### Goal reached
+
+![Goal Reached](screenshots/goal_reached.png)
+
+![Goal Reached](screenshots/goal_reached_2.png)

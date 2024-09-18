@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.13.4)
-project(path-finding-nn)
+project(path-finder)
 set (PROJECT_VERSION "1.0"    )
 project(${PROJECT_NAME} VERSION ${PROJECT_VERSION})
 # location of ma-libs
