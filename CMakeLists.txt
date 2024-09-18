@@ -99,30 +99,38 @@ else()
 endif()
 
 if (MSVC)
-
-    macro(${PROJECT_NAME}copyDLL)
-        ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
+    macro(COPYDLL)
+      if(CMAKE_BUILD_TYPE STREQUAL "Release")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/../../Release/
           COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/cpp_alg_lapack.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/cpp_alg_lapackd.dll>
-          ${CMAKE_BINARY_DIR}/../../$<CONFIG>
-        )
-        ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
+          ${CMAKE_SOURCE_DIR}/externals/ma-libs/build/Release/cpp_alg_lapack.dll
+          ${CMAKE_BINARY_DIR}/../../Release/
           COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:../../../externals/ma_libs/build/$<CONFIG>/cpp_nn.dll>
-          $<$<CONFIG:Debug>:../../../externals/ma_libs/build/$<CONFIG>/cpp_nnd.dll>
-          ${CMAKE_BINARY_DIR}/../../$<CONFIG>
-        )
-        ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
+          ${CMAKE_SOURCE_DIR}/externals/ma-libs/build/Release/cpp_nn.dll
+          ${CMAKE_BINARY_DIR}/../../Release/
+          )
+      elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/../../Debug/
           COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:${LOCAL_DIR}/bin/libpng16.dll>
-          $<$<CONFIG:Debug>:${LOCAL_DIR}/bin/libpng16d.dll>
-          ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>)
-        ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
+          ${CMAKE_SOURCE_DIR}/externals/ma-libs/build/Debug/cpp_alg_lapackd.dll
+          ${CMAKE_BINARY_DIR}/../../Debug/
           COMMAND ${CMAKE_COMMAND} -E copy
-          $<$<CONFIG:Release>:${LOCAL_DIR}/bin/zlib.dll>
-          $<$<CONFIG:Debug>:${LOCAL_DIR}/bin/zlibd.dll>
-          ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>)
+          ${CMAKE_SOURCE_DIR}/externals/ma-libs/build/Debug/cpp_nnd.dll
+          ${CMAKE_BINARY_DIR}/../../Debug/
+          )
+      endif()
+      ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        $<$<CONFIG:Release>:${LOCAL_DIR}/bin/libpng16.dll>
+        $<$<CONFIG:Debug>:${LOCAL_DIR}/bin/libpng16d.dll>
+        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>)
+      ADD_CUSTOM_COMMAND( TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+        $<$<CONFIG:Release>:${LOCAL_DIR}/bin/zlib.dll>
+        $<$<CONFIG:Debug>:${LOCAL_DIR}/bin/zlibd.dll>
+        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/$<CONFIG>)
     endmacro()
-    cmake_language(CALL ${PROJECT_NAME}copyDLL)
+    cmake_language(CALL COPYDLL)
 endif()

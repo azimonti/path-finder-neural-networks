@@ -16,7 +16,13 @@
 #include <cfloat>
 #include <cmath>
 #include <math.h>
+#ifdef min
+#undef min
+#endif
 
+#ifdef max
+#undef max
+#endif
 inline constexpr auto FM_PI = static_cast<float>(M_PI);
 
 template <typename T> class CustomUniformRealDistribution

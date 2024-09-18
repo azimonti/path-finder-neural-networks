@@ -1,2 +1,3 @@
 build/
 *.hd5
+.cs_config.json
