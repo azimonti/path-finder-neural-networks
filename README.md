@@ -9,9 +9,13 @@ Built together with [@dpasca](https://github.com/dpasca) who developed `Model 1`
 - Git
 - CMake
 - clang
-- curl
 - Fortran
 - HDF5
+- OpenGL
+- GLEW
+- GLFW
+- Dear ImGui
+- implot
 
 ## Getting Started
 
