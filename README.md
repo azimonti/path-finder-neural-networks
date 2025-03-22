@@ -2,7 +2,7 @@
 
 Application finding the shortest path using neural networks and genetic algorithms.
 
-Built together with [@dpasca](https://github.com/dpasca) who developed `Model 1`. 
+Built together with [@dpasca](https://github.com/dpasca) who developed `Model 1`.
 
 ## Required Tools
 
@@ -78,3 +78,15 @@ Further update of the submodule can be done with the command:
 ![Goal Reached](screenshots/goal_reached.png)
 
 ![Goal Reached](screenshots/goal_reached_2.png)
+
+## Contributing
+
+Contributions to the Path Finding Neural Networks project are welcome. Whether it's through submitting bug reports, proposing new features, or contributing to the code, your help is appreciated. For major changes, please open an issue first to discuss what you would like to change.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+
+If you have any questions or want to get in touch regarding the project, please open an issue or contact the repository maintainers directly through GitHub.
