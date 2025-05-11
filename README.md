@@ -39,27 +39,16 @@ Further update of the submodule can be done with the command:
   git submodule update --remote
   ```
 
-4. Compile the libraries in `ma-libs`
+4. Compile the binaries and the libraries
   ```
-  cd externals/ma-libs
-  # optional steps if dependencies are not installed globally
-  # ./manage_dependency_libraries.sh -d
-  # ./manage_dependency_libraries.sh -b
-  ./cbuild.sh --build-type Debug --cmake-params "-DCPP_LIBNN=ON -DCPP_LIBGRAPHIC_ENGINE=ON"
-  ./cbuild.sh --build-type Release --cmake-params "-DCPP_LIBNN=ON -DCPP_LIBGRAPHIC_ENGINE=ON"
-  cd ../..
+  ./build_libs.sh
   ```
 
   If any error or missing dependencies please look at the instructions [here](https://github.com/azimonti/ma-libs)
 
-5. Compile the binaries
+5. Run the programs
   ```
-  ./cbuild.sh -t Release (or -t Debug)
-  ```
-
-6. Run the program
-  ```
-  ./build/Release/path-finding
+  ./externals/ma-libs/build/Release/path-finding
   ```
 
 ## Screnshots

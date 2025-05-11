@@ -1,0 +1,10 @@
+path_finder_v1_seed = 7422
+path_finder_v1_nn_hidden_layers = 32
+path_finder_v1_nPop = 100
+path_finder_v1_nTop = 10
+path_finder_v1_nTopReport = 10
+path_finder_v1_save_periodic = true
+path_finder_v1_save_overwrite = true
+path_finder_v1_save_period = 100
+path_finder_v1_save_path = ./externals/ma-libs/build/
+path_finder_v1_save_name = path_finder

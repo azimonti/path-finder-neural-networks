@@ -5,21 +5,18 @@
 #include <functional>
 #include <memory>
 #include <vector>
-#include "hdf5/hdf5_ext.h"
 #include "log/log.h"
 #include "ann_mlp_ga_v1.h"
 #include "cs_m2_brain.h"
 #include "cs_trainbase.h"
 #include "cs_math.h"
-
-#define CS_M2_TRAIN_USE_HDF5_CONFIG
+#include "config_loader.h"
 
 //==================================================================
 //==================================================================
 class CS_M2_Train : public CS_TrainBase
 {
-    static constexpr const char* const CONFIGFILE = "./build/pathfinder.hd5";
-    static constexpr const char* const nname      = "pathfinder/v1";
+    static constexpr const char* const CONFIGFILE = "config.txt";
 
     // best chromos list just for display
     std::mutex mBestChromosMutex;
@@ -32,50 +29,35 @@ class CS_M2_Train : public CS_TrainBase
     CS_M2_Train(size_t insN, size_t outsN)
         : CS_TrainBase(insN, outsN)
     {
-#ifdef CS_M2_TRAIN_USE_HDF5_CONFIG
         if (!std::filesystem::exists(CONFIGFILE))
             throw std::runtime_error(std::string("File: ").append(CONFIGFILE).append(" not found. Exiting..."));
-        h5::H5ppReader h5(CONFIGFILE);
 
-        std::vector<size_t> nnsize, nnsizeH;
-        h5.read(std::string(nname).append("/nn_hidden_layers"), nnsizeH);
+        if (!Config::loadConfiguration(CONFIGFILE))
+            throw std::runtime_error(std::string("Failed to load configuration from: ").append(CONFIGFILE));
+
+        std::vector<size_t> nnsize;
+        size_t hidden_layers_size = static_cast<size_t>(Config::getInt("path_finder_v1_nn_hidden_layers"));
         nnsize.push_back(mInsN);
-        for (size_t i = 0; i < nnsizeH.size(); ++i) nnsize.push_back(nnsizeH[i]);
+        nnsize.push_back(hidden_layers_size);
         nnsize.push_back(mOutsN);
-        int seed;
-        h5.read(std::string(nname).append("/seed"), seed);
-        h5.read(std::string(nname).append("/nPop"), nPop);
-        h5.read(std::string(nname).append("/nTop"), nTop);
-        h5.read(std::string(nname).append("/nTopReport"), nTopReport);
-        h5.read(std::string(nname).append("/save_period"), nPeriod);
-        h5.read(std::string(nname).append("/save_periodic"), bSavePeriodic);
-        h5.read(std::string(nname).append("/save_overwrite"), bSaveOverwrite);
-        h5.read(std::string(nname).append("/save_path"), sSavePath);
-        h5.read(std::string(nname).append("/save_name"), sSaveName);
-#else
-        const int seed = 7422;
-        nPop = 100;
-        nTop = 10;
-        nTopReport = 10;
-        nPeriod = 100;
-        bSavePeriodic = true;
-        bSaveOverwrite = true;
-        sSavePath   = "./build/";
-        sSaveName   = "pathfinder_m2";
-        std::vector<size_t> nnsize, nnsizeH;
-        nnsizeH.push_back(32);
-        nnsize.push_back(mInsN);
-        for (size_t i = 0; i < nnsizeH.size(); ++i)
-            nnsize.push_back(nnsizeH[i]);
-        nnsize.push_back(mOutsN);
-#endif
+
+        int seed = Config::getInt("path_finder_v1_seed");
+        nPop = static_cast<size_t>(Config::getInt("path_finder_v1_nPop"));
+        nTop = static_cast<size_t>(Config::getInt("path_finder_v1_nTop"));
+        nTopReport = static_cast<size_t>(Config::getInt("path_finder_v1_nTopReport"));
+        nPeriod = static_cast<size_t>(Config::getInt("path_finder_v1_save_period"));
+        bSavePeriodic = Config::getBool("path_finder_v1_save_periodic");
+        bSaveOverwrite = Config::getBool("path_finder_v1_save_overwrite");
+        sSavePath = Config::getString("path_finder_v1_save_path");
+        sSaveName = Config::getString("path_finder_v1_save_name");
+
         // create save directory if not exists
         if (bSavePeriodic)
             if (!std::filesystem::exists(sSavePath)) std::filesystem::create_directory(sSavePath);
 
         mNN = std::make_unique<nn::ANN_MLP_GA<CS_SCALAR>>(nnsize, seed, nPop, nTop, nn::TANH);
         mNN->SetName("pathfinder");
-        mNN->SetMixed(false);
+        mNN->SetPopulationStrategy(nn::PopulationStrategy::MIXED_WITH_RANDOM_INJECTION, 0.3);
         mNN->CreatePopulation();
     }
 
